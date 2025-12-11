@@ -35,19 +35,7 @@ stock_name = yf.Ticker(stock_symbol).info.get('longName')
 current_time = pd.Timestamp.now(tz="America/New_York")
 
 
-#def save_stock_list( username, stock_list):
-
-#    rows=[]
-#
- #   with DB_FILE.open("r", encoding="utf-8") as db:
- #       for i in db:
-  #          fields = i.strip().split(";") 
-   #         if  fields[0] == username:
-    #            i.split(";")[3] = json.dumps(stock_list)
-#
- #   with DB_FILE.open("w", encoding="utf-8") as db:
-  #      for row in rows:
-   #         db.write(row + "\n")
+#def follow_stock(username, stock_symbol):
 
 
 
@@ -58,12 +46,24 @@ with left:
     #add stock logo later on
 with right:
     star = st.checkbox("Follow this stock")
-    st.session_state["stock_list"].append(stock_symbol)
-    #save_stock_list(st.session_state["Username"], st.session_state["stock_list"])
+    
+
+
+def create_account(username,password, email):
+    DB_FILE.parent.mkdir(parents=True, exist_ok=True)
+    stock_list=[]
+    # Write one JSON object per line so the DB file remains text-based
+    entry = {"username": username, "password": password, "email": email, "stock_list": stock_list}
+    with DB_FILE.open("a", encoding="utf-8") as db:
+        db.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 if star:
     if st.session_state["logged_in"]==True:
+        
         st.success(f"You are now following {stock_symbol}!")
+    else:
+        st.error("Please log in to follow stocks.")
+        st.switch_page("login_page.py")
 
 
 

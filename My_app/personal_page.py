@@ -19,12 +19,33 @@ if selected is not None: # new selection made
     st.rerun()
 
 
+def get_last_price(symbol):
+    price = yf.Ticker(symbol).fast_info["last_price"]
+    price=round(price,2)
+    st.markdown(f"***Last stock price: ${price}***")
+
+
+
+
+
+
+
 
 st.title("Personal Page")
 
 
 st.write(f"Welcome, {st.session_state['Username']}!")
 
-st.write(st.session_state["stock_list"])
-   
+st.header("Followed stock list:")
+if len(st.session_state["stock_list"]) > 0:
+      for i in st.session_state["stock_list"]:
+        col1, col2  = st.columns([70,30])
+        with col1:
+            st.subheader(f"- {i}")
+            st.write(get_last_price(i))
+        with col2:
+            stock_page_graph(i, "5d" ,"1m")
+else:
+    st.write(''':red[**No followed stock, save stocks to see them here!**]''')
+
 

@@ -38,16 +38,23 @@ def is_valid_email(email):
 def create_account(username,password, email):
     DB_FILE.parent.mkdir(parents=True, exist_ok=True)
     stock_list=[]
-
-    with DB_FILE.open( "a",  encoding="utf-8") as db:
-        db.write({"username": username, "password": password, "email": email, "stock_list": stock_list})
+    # Write one JSON object per line so the DB file remains text-based
+    entry = {"username": username, "password": password, "email": email, "stock_list": stock_list}
+    with DB_FILE.open("a", encoding="utf-8") as db:
+        db.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 def username_exists(username_input):
     try:
         with DB_FILE.open("r", encoding="utf-8") as db:
-            for i in db:
-                existing_username = "username"
-                if  existing_username == username_input:
+            for line in db:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    data = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if data.get("username") == username_input:
                     return True
         return False
     except FileNotFoundError:
@@ -65,17 +72,107 @@ def password_validation(password):
 def password_checker(username, password):
     try:
         with DB_FILE.open("r", encoding="utf-8") as db:
-            for i in db:
-                existing_username = "username"
-                if  existing_username == username:
-                    existing_password = "password"
-                    if existing_password == password:
-                        st.session_state["Username"]=username
-                        st.session_state["stock_list"] = json.loads(i.split(";")[3])
+            for line in db:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    data = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if data.get("username") == username:
+                    if data.get("password") == password:
+                        st.session_state["Username"] = username
+                        st.session_state["stock_list"] = data.get("stock_list", [])
                         return True
         return False
     except FileNotFoundError:
         return False   
+
+
+def read_all_users():
+    users = []
+    try:
+        with DB_FILE.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    users.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+    except FileNotFoundError:
+        pass
+    return users
+
+
+def write_all_users(users):
+    tmp = DB_FILE.with_suffix(".tmp")
+    with tmp.open("w", encoding="utf-8") as f:
+        for u in users:
+            f.write(json.dumps(u, ensure_ascii=False) + "\n")
+    tmp.replace(DB_FILE)
+
+
+def add_stock_to_user(username, symbol):
+    """Add `symbol` to the user's stock_list if not present. Returns True if added."""
+    users = read_all_users()
+    modified = False
+    for u in users:
+        if u.get("username") == username:
+            sl = u.get("stock_list")
+            if not isinstance(sl, list):
+                sl = []
+                u["stock_list"] = sl
+            if symbol not in sl:
+                sl.append(symbol)
+                modified = True
+            break
+    if modified:
+        write_all_users(users)
+    return modified
+
+
+def remove_stock_from_user(username, symbol):
+    """Remove `symbol` from the user's stock_list if present. Returns True if removed."""
+    users = read_all_users()
+    modified = False
+    for u in users:
+        if u.get("username") == username:
+            sl = u.get("stock_list")
+            if not isinstance(sl, list):
+                sl = []
+                u["stock_list"] = sl
+            if symbol in sl:
+                sl.remove(symbol)
+                modified = True
+            break
+    if modified:
+        write_all_users(users)
+    return modified
+
+
+def save_stock_list_for_current_user():
+    """Persist `st.session_state['stock_list']` for the logged-in user. Returns True on success."""
+    username = st.session_state.get("Username")
+    if not username:
+        return False
+    users = read_all_users()
+    for i, u in enumerate(users):
+        if u.get("username") == username:
+            users[i]["stock_list"] = st.session_state.get("stock_list", [])
+            write_all_users(users)
+            return True
+    # user not found: append a new record (unlikely in normal flow)
+    users.append({
+        "username": username,
+        "password": "",
+        "email": "",
+        "stock_list": st.session_state.get("stock_list", []),
+    })
+    write_all_users(users)
+    return True
 
 def search_stocks(search: str, count: int = 12):  #searh for stocks  yahoo finance , count=no.results   
 
