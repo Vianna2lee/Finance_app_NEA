@@ -90,7 +90,7 @@ def password_checker(username, password):
         return False   
 
 
-def read_all_users():
+#def read_all_users():
     users = []
     try:
         with DB_FILE.open("r", encoding="utf-8") as f:
@@ -107,7 +107,7 @@ def read_all_users():
     return users
 
 
-def write_all_users(users):
+#def write_all_users(users):
     tmp = DB_FILE.with_suffix(".tmp")
     with tmp.open("w", encoding="utf-8") as f:
         for u in users:
@@ -115,26 +115,26 @@ def write_all_users(users):
     tmp.replace(DB_FILE)
 
 
-def add_stock_to_user(username, symbol):
-    """Add `symbol` to the user's stock_list if not present. Returns True if added."""
-    users = read_all_users()
-    modified = False
-    for u in users:
-        if u.get("username") == username:
-            sl = u.get("stock_list")
-            if not isinstance(sl, list):
-                sl = []
-                u["stock_list"] = sl
-            if symbol not in sl:
-                sl.append(symbol)
-                modified = True
-            break
-    if modified:
-        write_all_users(users)
-    return modified
+#def add_stock_to_user(username, symbol):
+#    """Add `symbol` to the user's stock_list if not present. Returns True if added."""
+#    users = read_all_users()
+#    modified = False
+ #   for u in users:
+#        if u.get("username") == username:
+ #           sl = u.get("stock_list")
+#            if not isinstance(sl, list):
+ #               sl = []
+  #              u["stock_list"] = sl
+ #           if symbol not in sl:
+ #               sl.append(symbol)
+#                modified = True
+#            break
+#    if modified:
+#        write_all_users(users)
+#    return modified
 
 
-def remove_stock_from_user(username, symbol):
+#def remove_stock_from_user(username, symbol):
     """Remove `symbol` from the user's stock_list if present. Returns True if removed."""
     users = read_all_users()
     modified = False
@@ -153,7 +153,7 @@ def remove_stock_from_user(username, symbol):
     return modified
 
 
-def save_stock_list_for_current_user():
+#def save_stock_list_for_current_user():
     """Persist `st.session_state['stock_list']` for the logged-in user. Returns True on success."""
     username = st.session_state.get("Username")
     if not username:

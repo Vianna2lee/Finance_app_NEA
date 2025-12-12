@@ -38,6 +38,28 @@ current_time = pd.Timestamp.now(tz="America/New_York")
 #def follow_stock(username, stock_symbol):
 
 
+def read_data(username, stock_symbol):
+    try:
+        with DB_FILE.open("r", encoding="utf-8") as db:
+            for line in db:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    data = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if data.get("username") == username:
+                    for i in data.get("stock_list"):
+                        if i == stock_symbol:
+                            return True
+                    return False
+    except FileNotFoundError:
+        return False
+
+
+
+
 
 left, right = st.columns([80,20])
 
@@ -45,22 +67,44 @@ with left:
     st.title(f"{st.session_state['stock_symbol']} - {stock_name}" )
     #add stock logo later on
 with right:
-    star = st.checkbox("Follow this stock")
+    if read_data(st.session_state["Username"], st.session_state["stock_list"]) == True:
+        star = st.pills("Follow this stock", ["Follow stock"], selection_mode="single", default="Follow stock")
+    else:
+        star = st.pills("Follow this stock", ["Follow stock"], selection_mode="single")
     
 
+def follow_stock(username, stock_symbol):
+    try:
+        data = []
+        with DB_FILE.open("r", encoding="utf-8") as db:
+            for i in db:
+                i = i.strip()
+                data.append(json.loads(i))
+    except FileNotFoundError:
+        data = []
 
-def create_account(username,password, email):
-    DB_FILE.parent.mkdir(parents=True, exist_ok=True)
-    stock_list=[]
-    # Write one JSON object per line so the DB file remains text-based
-    entry = {"username": username, "password": password, "email": email, "stock_list": stock_list}
-    with DB_FILE.open("a", encoding="utf-8") as db:
-        db.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    changed = False
+    for i in data:
+        if i["username"] == username:
+            stocklist = i.get("stock_list") or []
+            stocklist.append(stock_symbol)
+            i["stock_list"] = stocklist
+            changed = True
+
+    if changed == True:
+        temp = DB_FILE.with_suffix(".tmp")
+        with temp.open("w", encoding="utf-8") as db:
+            for i in data:
+                db.write(json.dumps(i, ensure_ascii=False) + "\n")
+        temp.replace(DB_FILE)
+
+
+
 
 if star:
     if st.session_state["logged_in"]==True:
-        
-        st.success(f"You are now following {stock_symbol}!")
+       follow_stock(st.session_state["Username"], st.session_state["stock_list"])
+       st.success(f"You are now following {stock_symbol}!")
     else:
         st.error("Please log in to follow stocks.")
         st.switch_page("login_page.py")
