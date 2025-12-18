@@ -12,7 +12,9 @@ if "stock_searchbox" not in st.session_state or st.session_state["stock_searchbo
     st.session_state["stock_searchbox"] = 0
 
 if "stock_symbol" not in st.session_state or st.session_state["stock_symbol"] is None:
-    st.session_state["stock_symbol"] = "blank"
+    st.session_state["stock_symbol"] = None
+    st.info("Please search a stock to view")
+    st.stop()
 
 selected = st_searchbox(stock_search_suggestions, placeholder="Type to search for stocks ...", key=st.session_state["stock_searchbox"])
 
@@ -37,11 +39,6 @@ current_time = pd.Timestamp.now(tz="America/New_York")
 
 
 
-
-
-
-
-
 left, right = st.columns([80,20])
 
 with left:
@@ -50,13 +47,6 @@ with left:
 with right:
     star = st.button( "Follow stock")
     
-
-
-
-
-
-
-
 
 
 if star==True:

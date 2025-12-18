@@ -93,24 +93,20 @@ else:
 
 
 today = datetime.datetime.now()
-this_year = today.year 
-jan_1 = datetime.date(this_year, 1, 1)
-dec_31 = datetime.date(this_year, 12, 31)
+
 
 date = st.date_input(
-    "Select how long are you going to hold your option ",
-    ("today", datetime.date(this_year, 12, 7)),
-    jan_1,
-    dec_31,
+    "Select how long you are going to hold your option",
+    value=(today, today + dt.timedelta(days=10)),
+    min_value=today,
+    max_value=today + dt.timedelta(days=365 * 10),
     format="MM.DD.YYYY"
 )
 
-if len(date) == 2:
-    start_date = date[0]
-    end_date = date[1]
-else:
-   start_date, end_date = None, None
 
+if not isinstance(date, tuple) or len(date) != 2:
+    st.info("Pick an end date to complete the range.")
+    st.stop()
 
 
 

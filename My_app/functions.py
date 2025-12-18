@@ -91,89 +91,6 @@ def password_checker(username, password):
         return False   
 
 
-#def read_all_users():
-    users = []
-    try:
-        with DB_FILE.open("r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    users.append(json.loads(line))
-                except json.JSONDecodeError:
-                    continue
-    except FileNotFoundError:
-        pass
-    return users
-
-
-#def write_all_users(users):
-    tmp = DB_FILE.with_suffix(".tmp")
-    with tmp.open("w", encoding="utf-8") as f:
-        for u in users:
-            f.write(json.dumps(u, ensure_ascii=False) + "\n")
-    tmp.replace(DB_FILE)
-
-
-#def add_stock_to_user(username, symbol):
-#    """Add `symbol` to the user's stock_list if not present. Returns True if added."""
-#    users = read_all_users()
-#    modified = False
- #   for u in users:
-#        if u.get("username") == username:
- #           sl = u.get("stock_list")
-#            if not isinstance(sl, list):
- #               sl = []
-  #              u["stock_list"] = sl
- #           if symbol not in sl:
- #               sl.append(symbol)
-#                modified = True
-#            break
-#    if modified:
-#        write_all_users(users)
-#    return modified
-
-
-#def remove_stock_from_user(username, symbol):
-    """Remove `symbol` from the user's stock_list if present. Returns True if removed."""
-    users = read_all_users()
-    modified = False
-    for u in users:
-        if u.get("username") == username:
-            sl = u.get("stock_list")
-            if not isinstance(sl, list):
-                sl = []
-                u["stock_list"] = sl
-            if symbol in sl:
-                sl.remove(symbol)
-                modified = True
-            break
-    if modified:
-        write_all_users(users)
-    return modified
-
-
-#def save_stock_list_for_current_user():
-    """Persist `st.session_state['stock_list']` for the logged-in user. Returns True on success."""
-    username = st.session_state.get("Username")
-    if not username:
-        return False
-    users = read_all_users()
-    for i, u in enumerate(users):
-        if u.get("username") == username:
-            users[i]["stock_list"] = st.session_state.get("stock_list", [])
-            write_all_users(users)
-            return True
-    # user not found: append a new record (unlikely in normal flow)
-    users.append({
-        "username": username,
-        "password": "",
-        "email": "",
-        "stock_list": st.session_state.get("stock_list", []),
-    })
-    write_all_users(users)
-    return True
 
 def search_stocks(search: str, count: int = 12):  #searh for stocks  yahoo finance , count=no.results   
 
@@ -300,6 +217,59 @@ def follow_stock(username, stock_symbol):
                 stocklist.append(stock_symbol)
             i["stock_list"] = stocklist
   
+    temp = DB_FILE.with_suffix(".tmp")
+    with temp.open("w", encoding="utf-8") as db:
+        for i in data:
+            db.write(json.dumps(i, ensure_ascii=False) + "\n")
+    temp.replace(DB_FILE)
+
+def update_stock_variable(username):
+    try:
+        with DB_FILE.open("r", encoding="utf-8") as db:
+            for line in db:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    data = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if data.get("username") == username:
+                        st.session_state["Username"] = username
+                        st.session_state["stock_list"] = data.get("stock_list", [])
+                        break 
+    except FileNotFoundError:
+        pass 
+
+update_stock_variable(st.session_state['Username'])
+
+
+
+def get_last_price(symbol):
+    price = yf.Ticker(symbol).fast_info["last_price"]
+    price=round(price,2)
+    st.markdown(f"***Last stock price: ${price}***")
+
+
+
+def unfollow_stock(username, stock_symbol):
+    try:
+        data = []
+        with DB_FILE.open("r", encoding="utf-8") as db:
+            for i in db:
+                i = i.strip()
+                data.append(json.loads(i))
+    except FileNotFoundError:
+        data = []
+
+    for i in data:
+        if i["username"] == username:
+            stocklist = i.get("stock_list") or []
+            if stock_symbol in stocklist:
+                stocklist.remove(stock_symbol)
+            i["stock_list"] = stocklist
+    
+    
     temp = DB_FILE.with_suffix(".tmp")
     with temp.open("w", encoding="utf-8") as db:
         for i in data:
