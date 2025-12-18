@@ -1,1 +1,1 @@
-{"username": "abcd", "password": "11111111", "email": "abcd@gmail.com", "stock_list": []}
+{"username": "abcd", "password": "11111111", "email": "abcd@gmail.com", "stock_list": ["QQQ", "JNJ"]}

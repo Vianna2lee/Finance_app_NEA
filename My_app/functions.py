@@ -7,6 +7,7 @@ import pandas as pd
 import yfinance as yf  # pip install yfinance
 import json
 from pathlib import Path
+import math
 
 DB_FILE = Path("path/to/your/db.txt")
 
@@ -260,3 +261,47 @@ def stock_page_graph(stock_symbol, time_period ,time_interval):
         stock_data = yf.download(stock_symbol, period=time_period, interval=time_interval)
 
     st.line_chart(stock_data["Close"], height="content",use_container_width=True)
+
+
+def check_data(username, stock_symbol):
+    try:
+        with DB_FILE.open("r", encoding="utf-8") as db:
+            for line in db:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    data = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if data.get("username") == username:
+                    for i in data.get("stock_list"):
+                        if i == stock_symbol:
+                            return True
+                    return False
+    except FileNotFoundError:
+        return False
+
+    
+def follow_stock(username, stock_symbol):
+    try:
+        data = []
+        with DB_FILE.open("r", encoding="utf-8") as db:
+            for i in db:
+                i = i.strip()
+                data.append(json.loads(i))
+    except FileNotFoundError:
+        data = []
+
+    for i in data:
+        if i["username"] == username:
+            stocklist = i.get("stock_list") or []
+            if stock_symbol not in stocklist:
+                stocklist.append(stock_symbol)
+            i["stock_list"] = stocklist
+  
+    temp = DB_FILE.with_suffix(".tmp")
+    with temp.open("w", encoding="utf-8") as db:
+        for i in data:
+            db.write(json.dumps(i, ensure_ascii=False) + "\n")
+    temp.replace(DB_FILE)

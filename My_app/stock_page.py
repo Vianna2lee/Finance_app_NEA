@@ -15,7 +15,7 @@ if "stock_symbol" not in st.session_state or st.session_state["stock_symbol"] is
     st.session_state["stock_symbol"] = "blank"
 
 selected = st_searchbox(stock_search_suggestions, placeholder="Type to search for stocks ...", key=st.session_state["stock_searchbox"])
- 
+
 col_left, col_mid, col_right = st.columns([80,10,10])
 if col_right.button("refresh"):
     st.cache_data.clear()
@@ -35,27 +35,8 @@ stock_name = yf.Ticker(stock_symbol).info.get('longName')
 current_time = pd.Timestamp.now(tz="America/New_York")
 
 
-#def follow_stock(username, stock_symbol):
 
 
-def read_data(username, stock_symbol):
-    try:
-        with DB_FILE.open("r", encoding="utf-8") as db:
-            for line in db:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    data = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if data.get("username") == username:
-                    for i in data.get("stock_list"):
-                        if i == stock_symbol:
-                            return True
-                    return False
-    except FileNotFoundError:
-        return False
 
 
 
@@ -67,48 +48,27 @@ with left:
     st.title(f"{st.session_state['stock_symbol']} - {stock_name}" )
     #add stock logo later on
 with right:
-    if read_data(st.session_state["Username"], st.session_state["stock_list"]) == True:
-        star = st.pills("Follow this stock", ["Follow stock"], selection_mode="single", default="Follow stock")
-    else:
-        star = st.pills("Follow this stock", ["Follow stock"], selection_mode="single")
+    star = st.button( "Follow stock")
     
 
-def follow_stock(username, stock_symbol):
-    try:
-        data = []
-        with DB_FILE.open("r", encoding="utf-8") as db:
-            for i in db:
-                i = i.strip()
-                data.append(json.loads(i))
-    except FileNotFoundError:
-        data = []
-
-    changed = False
-    for i in data:
-        if i["username"] == username:
-            stocklist = i.get("stock_list") or []
-            stocklist.append(stock_symbol)
-            i["stock_list"] = stocklist
-            changed = True
-
-    if changed == True:
-        temp = DB_FILE.with_suffix(".tmp")
-        with temp.open("w", encoding="utf-8") as db:
-            for i in data:
-                db.write(json.dumps(i, ensure_ascii=False) + "\n")
-        temp.replace(DB_FILE)
 
 
 
 
-if star:
+
+
+
+
+if star==True:
     if st.session_state["logged_in"]==True:
-       follow_stock(st.session_state["Username"], st.session_state["stock_list"])
-       st.success(f"You are now following {stock_symbol}!")
+        if check_data(st.session_state["Username"], stock_symbol) == False:
+            follow_stock(st.session_state["Username"], stock_symbol)
+            st.success(f"You are now following {stock_symbol}!")
+        elif check_data(st.session_state["Username"], stock_symbol) == True:
+            st.error("You are already following this stock.")
     else:
-        st.error("Please log in to follow stocks.")
+        st.error("You need to be logged in to follow stocks.")
         st.switch_page("login_page.py")
-
 
 
 
@@ -169,26 +129,36 @@ graph=stock_page_graph(st.session_state['stock_symbol'], time_period ,time_inter
 
 stock_symbol = yf.Ticker(stock_symbol)
 
+def format_output(value):
+    if value == None:
+        return "N/A"
+    elif isinstance(value, float) and math.isnan(value):
+        return round(value, 2)
+    else:
+        return value
+
+
+
 with st.container(border=True):
     st.subheader('Statistics: ')
     col3, col4=st.columns(2)
     with col3:
-        st.markdown(f"**Previous close** : {stock_symbol.info['previousClose']}")
-        st.markdown(f"**Opening price of the day** : {stock_symbol.info['open']}")
-        st.markdown(f"**Lowest price today** : {stock_symbol.info['dayLow']}")
-        st.markdown(f"**Highest price today** : {stock_symbol.info['dayHigh']}")
-        st.markdown(f"**Day's Range** : {stock_symbol.info['dayHigh']}-{stock_symbol.info['dayLow']}")
-        st.markdown(f"**52 Week Range** : {stock_symbol.info['fiftyTwoWeekLow']} - {stock_symbol.info['fiftyTwoWeekHigh']}")
-        st.markdown(f"**Volume** : {stock_symbol.info['volume']}")
-        st.markdown(f"**Avg. Volume** : {stock_symbol.info['averageDailyVolume3Month']}")
+        st.markdown(f"**Previous close** : {format_output(stock_symbol.info.get('previousClose'))}")
+        st.markdown(f"**Opening price of the day** : {format_output(stock_symbol.info.get('open'))}")
+        st.markdown(f"**Lowest price today** : {format_output(stock_symbol.info.get('dayLow'))}")
+        st.markdown(f"**Highest price today** : {format_output(stock_symbol.info.get('dayHigh'))}")
+        st.markdown(f"**Day's Range** : {format_output(stock_symbol.info.get('dayHigh'))}-{format_output(stock_symbol.info.get('dayLow'))}")
+        st.markdown(f"**52 Week Range** : {format_output(stock_symbol.info.get('fiftyTwoWeekLow'))} - {format_output(stock_symbol.info.get('fiftyTwoWeekHigh'))}")
+        st.markdown(f"**Volume** : {format_output(stock_symbol.info.get('volume'))}")
+        st.markdown(f"**Avg. Volume** : {format_output(stock_symbol.info.get('averageDailyVolume3Month'))}")
     with col4:
-        st.markdown(f"**Market Cap (intraday)** : {stock_symbol.info['marketCap']}")
-        st.markdown(f"**Beta** : {stock_symbol.info['beta']}")
-        st.markdown(f"**PE Ratio (TTM)** : {stock_symbol.info['trailingPE']}")
-        st.markdown(f"**EPS (TTM)** : {stock_symbol.info['trailingEps']}")
-        st.markdown(f"**Forward Dividend & Yield** : {stock_symbol.info['dividendYield']}")
-        st.markdown(f"**Ex-Dividend Date** : {stock_symbol.info['exDividendDate']}")
-        st.markdown(f"**1 year Target Est** : {stock_symbol.info['targetMeanPrice']}")
+        st.markdown(f"**Market Cap (intraday)** : {format_output(stock_symbol.info.get('marketCap'))}")
+        st.markdown(f"**Beta** : {format_output(stock_symbol.info.get('beta'))}")
+        st.markdown(f"**PE Ratio (TTM)** : {format_output(stock_symbol.info.get('trailingPE'))}")
+        st.markdown(f"**EPS (TTM)** : {format_output(stock_symbol.info.get('trailingEps'))}")
+        st.markdown(f"**Forward Dividend & Yield** : {format_output(stock_symbol.info.get('dividendYield'))}")
+        st.markdown(f"**Ex-Dividend Date** : {format_output(stock_symbol.info.get('exDividendDate'))}")
+        st.markdown(f"**1 year Target Est** : {format_output(stock_symbol.info.get('targetMeanPrice'))}")
 
 
 
