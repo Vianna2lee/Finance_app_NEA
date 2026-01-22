@@ -29,7 +29,7 @@ if st.session_state["logged_in"]==True:
 else:
     pages = public_pages
 
-# direct user to personal page after login
+# direct user to personal page after login 
 
 nav = st.navigation(pages)
 nav.run()
