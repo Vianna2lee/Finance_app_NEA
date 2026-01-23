@@ -29,9 +29,9 @@ if selected is not None:
     st.switch_page("stock_page.py")
     st.rerun()
 
+# above need to check the code & comment 
 
-
-stock_symbol =st.session_state['stock_symbol']
+stock_symbol =st.session_state['stock_symbol'] 
 stock_name = yf.Ticker(stock_symbol).info.get('longName')
 
 current_time = pd.Timestamp.now(tz="America/New_York")

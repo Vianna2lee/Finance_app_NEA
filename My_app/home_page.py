@@ -12,7 +12,7 @@ st.set_page_config(layout="wide")
 
 
 # initialise session state variables
-if "stock_searchbox" not in st.session_state or st.session_state["stock_searchbox"] is None:
+if "stock_searchbox" not in st.session_state or st.session_state["stock_searchbox"] is None: 
     st.session_state["stock_searchbox"] = 0
 
 
@@ -27,23 +27,23 @@ if selected is not None: # new selection made
     st.rerun()
 
 
+# above need to check the code & comment 
 
 
 
 
+col_left, col_mid, col_right = st.columns([80,10,10]) #the layout of the page with three columns
 
-col_left, col_mid, col_right = st.columns([80,10,10])
-
-if col_right.button("refresh"):
-    st.cache_data.clear()
-    st.rerun()
+if col_right.button("refresh"): #create a refresh button on the right side of the page
+    st.cache_data.clear() #if clicked, clear the cache
+    st.rerun() #rerun app
 
 
-st.header("Overview of the stock market today")
+st.header("Overview of the stock market today") #header of the page
 
-# === Indices ===
-st.subheader("Indices:")
-col1, col2, col3 = st.columns(3)
+# Indices 
+st.subheader("Indices:") #subheader for indices section
+col1, col2, col3 = st.columns(3) #three columns for three major indices
 with col1:
     stock_box("S&P 500", "SPY")
 with col2:
@@ -51,10 +51,10 @@ with col2:
 with col3:
     stock_box("NASDAQ-100", "QQQ")
 
-st.subheader("Performance of each sector:")
+st.subheader("Performance of each sector:") #subheader for sector performance section
 
-#Technology Sector 
-st.subheader("Technology Sector")
+# technology sector 
+st.subheader("Technology Sector") #subheader for technology sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("Apple Inc.", "AAPL")
@@ -63,8 +63,8 @@ with col2:
 with col3:
     stock_box("NVIDIA Corp.", "NVDA")
 
-# Health Care Sector
-st.subheader("Health Care Sector")
+# health care sector
+st.subheader("Health Care Sector") #subheader for health care sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("UnitedHealth Group Inc.", "UNH")
@@ -73,8 +73,8 @@ with col2:
 with col3:
     stock_box("Pfizer Inc.", "PFE")
 
-#Financials Sector
-st.subheader("Financials Sector")
+#financials sector
+st.subheader("Financials Sector") #subheader for financials sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("JPMorgan Chase & Co.", "JPM")
@@ -83,8 +83,8 @@ with col2:
 with col3:
     stock_box("Wells Fargo & Co.", "WFC")
 
-#Consumer Discretionary Sector 
-st.subheader("Consumer Discretionary Sector")
+#consumer discretionary sector 
+st.subheader("Consumer Discretionary Sector") #subheader for consumer discretionary sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("Amazon.com Inc.", "AMZN")
@@ -93,8 +93,8 @@ with col2:
 with col3:
     stock_box("The Home Depot Inc.", "HD")
 
-#Communication Services Sector 
-st.subheader("Communication Services Sector")
+#communication services sector 
+st.subheader("Communication Services Sector") #subheader for communication services sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("Alphabet Inc.", "GOOGL")
@@ -103,8 +103,8 @@ with col2:
 with col3:
     stock_box("Netflix Inc.", "NFLX")
 
-# Industrials Sector 
-st.subheader("Industrials Sector")
+# industrials sector 
+st.subheader("Industrials Sector") #subheader for industrials sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("The Boeing Company", "BA")
@@ -113,8 +113,8 @@ with col2:
 with col3:
     stock_box("Honeywell International Inc.", "HON")
 
-#Consumer Staples Sector 
-st.subheader("Consumer Staples Sector")
+#consumer staples sector 
+st.subheader("Consumer Staples Sector") #subheader for consumer staples sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("Procter & Gamble Co.", "PG")
@@ -123,8 +123,8 @@ with col2:
 with col3:
     stock_box("Costco Wholesale Corp.", "COST")
 
-#Energy Sector 
-st.subheader("Energy Sector")
+#energy sector 
+st.subheader("Energy Sector") #subheader for energy sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("Exxon Mobil Corp.", "XOM")
@@ -133,8 +133,8 @@ with col2:
 with col3:
     stock_box("ConocoPhillips", "COP")
 
-# Utilities Sector
-st.subheader("Utilities Sector")
+# utilities sector
+st.subheader("Utilities Sector") #subheader for utilities sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("NextEra Energy Inc.", "NEE")
@@ -143,8 +143,8 @@ with col2:
 with col3:
     stock_box("The Southern Company", "SO")
 
-#  Real Estate Sector
-st.subheader("Real Estate Sector")
+#  real estate sector
+st.subheader("Real Estate Sector") #subheader for real estate sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("American Tower Corp.", "AMT")
@@ -153,8 +153,8 @@ with col2:
 with col3:
     stock_box("Realty Income Corp.", "O")
 
-# Materials Sector 
-st.subheader("Materials Sector")
+# materials sector
+st.subheader("Materials Sector") #subheader for materials sector
 col1, col2, col3 = st.columns(3)
 with col1:
     stock_box("Linde plc", "LIN")

@@ -4,11 +4,11 @@ from login_page import *
 # streamlit run My_app/navigation_page.py to run the app
 
 
-if "logged_in" not in st.session_state:
-    st.session_state["logged_in"] = False
+if "logged_in" not in st.session_state: #if the session state variable- logged_in does not exist
+    st.session_state["logged_in"] = False #it is created and set to false
 
 
-public_pages = [
+public_pages = [ #this is the navigation bar for users who are not logged in 
         st.Page("home_page.py", title="Home page"),
         st.Page("stock_page.py", title="Stock page"),
         st.Page("login_page.py", title="Login page"),
@@ -16,7 +16,7 @@ public_pages = [
         st.Page("option_price_calculator_page.py", title="Option price calculator page"),
     ]
 
-private_pages = [
+private_pages = [ #this is the navigation bar for users who are logged in
         st.Page("home_page.py", title="Home page"),
         st.Page("stock_page.py", title="Stock page"),
         st.Page("option_price_calculator_page.py", title="Option price calculator page"),
@@ -24,13 +24,13 @@ private_pages = [
         st.Page("logout_page.py", title="Logout"),
     ]
 
-if st.session_state["logged_in"]==True:
-    pages = private_pages 
-else:
-    pages = public_pages
+if st.session_state["logged_in"]==True: #if user is logged in
+    pages = private_pages #set to private pages
+else: #if user is not logged in
+    pages = public_pages #set to public pages
 
-# direct user to personal page after login 
 
-nav = st.navigation(pages)
-nav.run()
+nav = st.navigation(pages) #create the navigation bar
+nav.run() #run the navigation bar
+
 

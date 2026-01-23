@@ -19,7 +19,7 @@ if "Username" not in st.session_state:
 
 
 
-def is_valid_email(email):
+def is_valid_email(email): #check if the email is in valid format
 
     """Check if the email is a valid format."""
 
