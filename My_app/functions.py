@@ -136,7 +136,7 @@ def stock_search_suggestions(query: str):
     results, err = search_stocks(query)
     if err or not results:
         return []
-    return [f"{r['symbol']} — {r['name']} ({r['exchange']})" for r in results]
+    return [f"{r['symbol']} - {r['name']} ({r['exchange']})" for r in results]
 
 
 def stock_graph(stock_symbol):

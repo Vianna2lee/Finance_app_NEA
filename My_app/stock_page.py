@@ -1,6 +1,9 @@
 import streamlit as st
 from functions import *
 from streamlit_searchbox import st_searchbox # pip install streamlit-searchbox
+from datetime import datetime
+import time
+import pytz
 #pip install lxml
  # pip install yahoo_fin pip install yahoo_fin --upgrade   
 # import plotly.graph_objects as go #pip install plotly use for later 
@@ -24,19 +27,15 @@ if col_right.button("refresh"):
     st.rerun()
 
 if selected is not None: 
-    st.session_state['stock_symbol'] = selected.split(' — ')[0] 
+    st.session_state['stock_symbol'] = selected.split(' - ')[0] 
     st.session_state['stock_searchbox'] += 1 
     st.switch_page("stock_page.py")
     st.rerun()
 
-# above need to check the code & comment 
+
 
 stock_symbol =st.session_state['stock_symbol'] 
 stock_name = yf.Ticker(stock_symbol).info.get('longName')
-
-current_time = pd.Timestamp.now(tz="America/New_York")
-
-
 
 
 left, right = st.columns([80,20])
@@ -62,10 +61,18 @@ if star==True:
 
 
 
-price= yf.Ticker(stock_symbol).fast_info["last_price"]
-price= round(price,4)
-st.subheader(price)
 
+def get_stock_price(stock_symbol):
+    fi = yf.Ticker(stock_symbol).fast_info
+    price = fi.get("last_price",None)
+    if price is None:
+        price= fi.get("lastPrice",None)
+    return round(price,4)
+
+
+st.subheader(get_stock_price(stock_symbol))
+
+current_time = pd.Timestamp.now(tz="America/New_York")
 st.markdown(f"As of {current_time}")
 
 
@@ -119,7 +126,7 @@ graph=stock_page_graph(st.session_state['stock_symbol'], time_period ,time_inter
 
 stock_symbol = yf.Ticker(stock_symbol)
 
-def format_output(value):
+def format_output(value):  ##
     if value == None:
         return "N/A"
     elif isinstance(value, float) and math.isnan(value):

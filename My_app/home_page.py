@@ -20,14 +20,12 @@ selected = st_searchbox(stock_search_suggestions, placeholder="Type to search fo
  
 
 
-if selected is not None: # new selection made
-    st.session_state['stock_symbol'] =  str(selected.split(' — ')[0] )
-    st.session_state['stock_searchbox'] += 1 
+if selected is not None: 
+    st.session_state['stock_symbol'] =  str(selected.split(' - ')[0] )
+    st.session_state['stock_searchbox'] += 1 # key changes so searchbox resets after a stock is picked
     st.switch_page("stock_page.py")
     st.rerun()
 
-
-# above need to check the code & comment 
 
 
 

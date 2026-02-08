@@ -24,7 +24,7 @@ with st.form("Login", enter_to_submit=True): #create a form for login
 
     if button: #if teh button is clicked
         error=[] #error list is created to store error messages, it is initially empty
-        if not username or not password: #if the username or password is empty
+        if username == "" or password == "": #if the username or password is empty
             error.append("All fields are required. Please fill in all details.") #add error message to the error list
         if password_checker(username, password) == False: #if password doesn't meet the reuirements
             error.append("Incorrect username or password")    #add error message to the error list

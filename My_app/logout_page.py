@@ -9,4 +9,4 @@ if st.button("Logout", type="primary"): #create a logout button, when clicked
     st.session_state['stock_list'] = [] #session state variable- stock_list is set to an empty list
     st.rerun() #the app is rerun to reflect the changes in the session state and navigation bar is updated
 
-# button aappear in all page so i can remove this page
+

@@ -17,7 +17,7 @@ with st.form("Create account", enter_to_submit=True):
         error=[]
         if password != password_again:
             error.append("Passwords do not match. Please try again.")
-        if not username or not password or not email:
+        if username =="" or  password =="" or email=="":
             error.append("All fields are required. Please fill in all details.")
         if is_valid_email(email) == False:
             error.append("Invalid email address. Please enter a valid email.")

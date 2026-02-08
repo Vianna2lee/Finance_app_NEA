@@ -9,19 +9,19 @@ if "logged_in" not in st.session_state: #if the session state variable- logged_i
 
 
 public_pages = [ #this is the navigation bar for users who are not logged in 
-        st.Page("home_page.py", title="Home page"),
-        st.Page("stock_page.py", title="Stock page"),
-        st.Page("login_page.py", title="Login page"),
-        st.Page("create_account_page.py", title="Sign up page"),
-        st.Page("option_price_calculator_page.py", title="Option price calculator page"),
+        st.Page("home_page.py", title="Home page"), #home page
+        st.Page("stock_page.py", title="Stock page"), #stock page
+        st.Page("login_page.py", title="Login page"), #login page   
+        st.Page("create_account_page.py", title="Sign up page"), #sign up page
+        st.Page("option_price_calculator_page.py", title="Option price calculator page"), #option price calculator page
     ]
 
 private_pages = [ #this is the navigation bar for users who are logged in
-        st.Page("home_page.py", title="Home page"),
-        st.Page("stock_page.py", title="Stock page"),
-        st.Page("option_price_calculator_page.py", title="Option price calculator page"),
-        st.Page("personal_page.py", title="Personal page"),
-        st.Page("logout_page.py", title="Logout"),
+        st.Page("home_page.py", title="Home page"), #home page 
+        st.Page("stock_page.py", title="Stock page"), #stock page
+        st.Page("option_price_calculator_page.py", title="Option price calculator page"), #option price calculator page 
+        st.Page("personal_page.py", title="Personal page"), #personal page  
+        st.Page("logout_page.py", title="Logout"), #logout page 
     ]
 
 if st.session_state["logged_in"]==True: #if user is logged in
