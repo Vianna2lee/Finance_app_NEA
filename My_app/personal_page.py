@@ -4,6 +4,7 @@ from streamlit_searchbox import st_searchbox # pip install streamlit-searchbox
 # streamlit run My_app/navigation_page.py to run the app
 
 
+st.title("Personal Page")
 
 if "stock_searchbox" not in st.session_state or st.session_state["stock_searchbox"] is None:
         st.session_state["stock_searchbox"] = 0
@@ -17,8 +18,6 @@ if selected is not None: # new selection made
     st.rerun()
 
 
-
-st.title("Personal Page")
 
 
 st.write(f"Welcome, {st.session_state['Username']}!")

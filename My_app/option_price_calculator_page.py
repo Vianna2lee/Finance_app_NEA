@@ -12,12 +12,15 @@ import numpy as np #pip install --upgrade numpy
 
 # streamlit run My_app/navigation_page.py to run the app
 
-if "stock_searchbox" not in st.session_state or st.session_state["stock_searchbox"] is None:
-        st.session_state["stock_searchbox"] = 0
-#https://pypi.org/project/option-price/
 
+#https://pypi.org/project/option-price/ website 
 
 st.title("Option Price Calculator")
+
+if "stock_searchbox" not in st.session_state or st.session_state["stock_searchbox"] is None:
+        st.session_state["stock_searchbox"] = 0
+
+
 
 option_type,option_kind,approach,s0,strike_price,volatility_of_stock,risk_free_interest_rate,start_date,end_date= (None,)*9
 
