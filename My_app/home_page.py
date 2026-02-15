@@ -8,7 +8,7 @@ st.set_page_config(layout="wide")
 
 # need to install streamlit-searchbox by trying: pip install streamlit-searchbox
 # run with: streamlit run My_app/home_page.py
-# streamlit run My_app/navigation_page.py to run the ap
+# streamlit run My_app/navigation_page.py to run the app
 
 
 # initialise session state variables

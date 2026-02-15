@@ -34,9 +34,7 @@ if len(st.session_state["stock_list"]) > 0:
             if st.button("Unfollow", key=f"unfollow_{i}", type="primary"):
                 unfollow_stock(st.session_state["Username"], i)
                 st.success(f"You have unfollowed {i}.")
-                st.session_state["stock_list"].remove(i)
                 st.rerun()
-                
         with col2:
             if st.button("More info", key=f"moreinfo_{i}", type="secondary"):
                 st.session_state['stock_symbol'] = i

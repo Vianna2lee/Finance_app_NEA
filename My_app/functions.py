@@ -203,6 +203,20 @@ def check_data(username, stock_symbol): ##!!! need to fix, personal page not wor
     except FileNotFoundError:
         return False
 
+def update_stock_variable(username):  ##!!! need to fix, personal page not working 
+    
+    with DB_FILE.open("r", encoding="utf-8") as db:
+        for line in db:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                data = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if data.get("username") == username:
+                    st.session_state["stock_list"] = data.get("stock_list", [])
+                    break 
                 
 
     
@@ -212,7 +226,8 @@ def follow_stock(username, stock_symbol): ##!!! need to fix, personal page not w
         with DB_FILE.open("r", encoding="utf-8") as db:
             for i in db:
                 i = i.strip()
-                data.append(json.loads(i))
+                if i != "":
+                    data.append(json.loads(i))
     except FileNotFoundError:
         data = []
 
@@ -228,26 +243,11 @@ def follow_stock(username, stock_symbol): ##!!! need to fix, personal page not w
         for i in data:
             db.write(json.dumps(i, ensure_ascii=False) + "\n")
     temp.replace(DB_FILE)
+    update_stock_variable(st.session_state['Username'])
 
-def update_stock_variable(username):  ##!!! need to fix, personal page not working 
-    try:
-        with DB_FILE.open("r", encoding="utf-8") as db:
-            for line in db:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    data = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if data.get("username") == username:
-                        st.session_state["Username"] = username
-                        st.session_state["stock_list"] = data.get("stock_list", [])
-                        break 
-    except FileNotFoundError:
-        pass 
 
-update_stock_variable(st.session_state['Username'])
+
+
 
 
 
@@ -264,7 +264,8 @@ def unfollow_stock(username, stock_symbol): ##!!! need to fix, personal page not
         with DB_FILE.open("r", encoding="utf-8") as db:
             for i in db:
                 i = i.strip()
-                data.append(json.loads(i))
+                if i != "":
+                    data.append(json.loads(i))
     except FileNotFoundError:
         data = []
 
@@ -281,3 +282,5 @@ def unfollow_stock(username, stock_symbol): ##!!! need to fix, personal page not
         for i in data:
             db.write(json.dumps(i, ensure_ascii=False) + "\n")
     temp.replace(DB_FILE)
+    
+    update_stock_variable(st.session_state['Username'])
