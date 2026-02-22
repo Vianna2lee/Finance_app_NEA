@@ -1,6 +1,6 @@
 import streamlit as st
 from functions import *
-from login_page import *
+#from login_page import *
 # streamlit run My_app/navigation_page.py to run the app
 
 

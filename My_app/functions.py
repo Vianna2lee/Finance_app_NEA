@@ -28,10 +28,6 @@ if "Username" not in st.session_state:
 
 def is_valid_email(email): #check if the email is in valid format #modified
 
-    """Check if the email is a valid format."""
-
-    # Regular expression for validating an Email
-
     pattern = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
 
     return (re.match(pattern, email) is not None)#retun true if the email is valid, false if not valid
@@ -47,6 +43,10 @@ def create_account(username,password, email): #modified
              "stock_list": stock_list}
     with DB_FILE.open("a", encoding="utf-8") as db:
         db.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+    st.session_state["Username"] = username
+    st.session_state["stock_list"]= stock_list
+
 
 def username_exists(username_input): #modified
     found = False
@@ -185,26 +185,6 @@ def stock_page_graph(stock_symbol, time_period ,time_interval): #no need to modi
 
 
 def check_data(username, stock_symbol): ##!!! need to fix, personal page not working 
-    try:
-        with DB_FILE.open("r", encoding="utf-8") as db:
-            for line in db:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    data = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if data.get("username") == username:
-                    for i in data.get("stock_list"):
-                        if i == stock_symbol:
-                            return True
-                    return False
-    except FileNotFoundError:
-        return False
-
-def update_stock_variable(username):  ##!!! need to fix, personal page not working 
-    
     with DB_FILE.open("r", encoding="utf-8") as db:
         for line in db:
             line = line.strip()
@@ -214,6 +194,19 @@ def update_stock_variable(username):  ##!!! need to fix, personal page not worki
                 data = json.loads(line)
             except json.JSONDecodeError:
                 continue
+            if data.get("username") == username:
+                for i in data.get("stock_list"):
+                    if i == stock_symbol:
+                        return True
+                return False
+
+def update_stock_variable(username):  ##!!! need to fix, personal page not working 
+    with DB_FILE.open("r", encoding="utf-8") as db:
+        for line in db:
+            line = line.strip()
+            if not line:
+                continue
+            data = json.loads(line)
             if data.get("username") == username:
                     st.session_state["stock_list"] = data.get("stock_list", [])
                     break 
@@ -282,5 +275,4 @@ def unfollow_stock(username, stock_symbol): ##!!! need to fix, personal page not
         for i in data:
             db.write(json.dumps(i, ensure_ascii=False) + "\n")
     temp.replace(DB_FILE)
-    
     update_stock_variable(st.session_state['Username'])

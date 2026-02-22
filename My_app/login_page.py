@@ -22,7 +22,7 @@ with st.form("Login", enter_to_submit=True): #create a form for login
     button = st.form_submit_button("Login") #button to submit the form
 
 
-    if button: #if teh button is clicked
+    if button: #if the button is clicked
         error=[] #error list is created to store error messages, it is initially empty
         if username == "" or password == "": #if the username or password is empty
             error.append("All fields are required. Please fill in all details.") #add error message to the error list

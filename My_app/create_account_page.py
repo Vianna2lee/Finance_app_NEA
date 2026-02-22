@@ -37,6 +37,3 @@ with st.form("Create account", enter_to_submit=True):
             st.rerun()
             
       # log in rght after created an account        
-
-
-
