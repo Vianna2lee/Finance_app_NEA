@@ -83,7 +83,7 @@ st.markdown(f"As of {current_time}")
 col1, col2 = st.columns(2)
 with col1:
     time_period = st.selectbox(
-        "time period",
+        "Time period",
         ("1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"),
         index=4
     )

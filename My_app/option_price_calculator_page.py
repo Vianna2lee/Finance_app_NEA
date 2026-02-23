@@ -106,6 +106,8 @@ date = st.date_input(
     format="MM.DD.YYYY"
 )
 
+start_date = date[0]
+end_date = date[1]
 
 if not isinstance(date, tuple) or len(date) != 2:
     st.info("Pick an end date to complete the range.")
@@ -133,7 +135,7 @@ if calculate:
         if s0 == 0:
                 error.append("Spot price must be greater than 0")
         if strike_price ==0:
-                error.append("strike price must be greater than 0")
+                error.append("Strike price must be greater than 0")
         if strike_price > s0 and option_kind == "call":
             error.append("For a call option, the strike price should not be greater than the spot price.")
         if strike_price < s0 and option_kind == "put":
@@ -168,5 +170,5 @@ if calculate:
 
 
             st.write(option_input)
-            st.subheader(f"The calculated option price is: {round(price,4)}")
+            st.subheader(f"Option price: {round(price,4)}")
         

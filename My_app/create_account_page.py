@@ -3,7 +3,7 @@ from functions import *
 # streamlit run My_app/4_create_account_page.py to run the app
 
 
-st.title("Create account")
+st.title("Create account") 
 
 with st.form("Create account", enter_to_submit=True):
     username = st.text_input("Create account name:", placeholder="Create an account name")

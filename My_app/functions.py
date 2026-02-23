@@ -192,7 +192,7 @@ def check_data(username, stock_symbol): ##!!! need to fix, personal page not wor
                 continue
             try:
                 data = json.loads(line)
-            except json.JSONDecodeError:
+            except Exception:
                 continue
             if data.get("username") == username:
                 for i in data.get("stock_list"):
