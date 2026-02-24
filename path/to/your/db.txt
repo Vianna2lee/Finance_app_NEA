@@ -1,4 +1,2 @@
-{"username": "abcd", "password": "11111111", "email": "abcd@gmail.com", "stock_list": ["DIA", "QQQ", "NVDA"]}
-{"username": "aaaa", "password": "0000000000", "email": "aaaaaaa@gmail.com", "stock_list": []}
-{"username": "11111111", "password": "99999999", "email": "gg@gmail.com", "stock_list": []}
-{"username": "aaa", "password": "vvvvvvvv", "email": "vv@gmail.com", "stock_list": ["QQQ"]}
+{"username": "abc", "password": "11111111", "email": "abc@gmail.com", "stock_list": ["DIA", "AAPL", "ABT"]}
+{"username": "abd", "password": "wwwwwwww", "email": "www@gmail.com", "stock_list": []}

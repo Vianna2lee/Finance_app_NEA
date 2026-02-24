@@ -159,7 +159,7 @@ with st.container(border=True):
 
 
 
-st.subheader("Performance charts & data:")
+st.subheader("Performance chart & data:")
 
 
 price = stock_symbol.history(period="2y")

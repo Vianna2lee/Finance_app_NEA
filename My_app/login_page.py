@@ -4,12 +4,12 @@ from functions import *
 
 st.title("Login Page") #title of the page 
 
-if "Username" not in st.session_state: #if the session state variable-Username does not exist
+if "Username" not in st.session_state: #if username is not in session state variable 
     st.session_state["Username"] = None # it is created and set to None
 
 
 
-if "stock_list" not in st.session_state or st.session_state["stock_list"] is None: #if the session state variable- stock_list, does not exist or is None 
+if "stock_list" not in st.session_state or st.session_state["stock_list"] is None: #if stocklist is not in session state variable
     st.session_state["stock_list"] = [] #it is created and set to an empty list 
 
 
@@ -34,8 +34,8 @@ with st.form("Login", enter_to_submit=True): #create a form for login
                 st.error(err) #each one is displayed using st.error()
         else: #if there are no errors 
             st.success("You have been logged in successfully.") #display success message
-            st.session_state["logged_in"]=True #set the session state variable- logged_in to true
-            st.rerun() #the app is rerun to reflect the changes in the session state and navigation bar is updated
+            st.session_state["logged_in"]=True #set the session state variable
+            st.rerun() #the app is rerun 
 
 
 
