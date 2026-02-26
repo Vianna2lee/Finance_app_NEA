@@ -10,3 +10,4 @@ if st.button("Logout", type="primary"): #create a logout button, when clicked
     st.rerun() #rerun 
 
 
+

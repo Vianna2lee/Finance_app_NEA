@@ -77,10 +77,10 @@ if volatility_of_stock_input_type == "Manual":  #provide textbox
 else:
     selected = st_searchbox(stock_search_suggestions, placeholder="Type to search for stocks ...",key="volatility_stock_searchbox") #search for search and their voilatility 
     if selected:
-        stock_symbol = str(selected.split(' — ')[0] )
-        price_history = yf.download(stock_symbol, period="1y")["Close"]
-        volatility_of_stock = np.log(price_history).diff().std()*np.sqrt(252)
-        volatility_of_stock = volatility_of_stock/100
+        stock_symbol = str(selected.split(' — ')[0] ) #store the symbol 
+        price_history = yf.download(stock_symbol, period="1y")["Close"] #get price history for a year
+        volatility_of_stock = np.log(price_history).diff().std()*np.sqrt(252) #calculate volatility 
+        volatility_of_stock = volatility_of_stock/100 #input in % 
 
 
 
@@ -95,7 +95,7 @@ else:
 
 
 
-today = datetime.datetime.now()
+today = datetime.datetime.now() #time for now 
 
 
 date = st.date_input( #date input
@@ -119,19 +119,19 @@ calculate = st.button("Calculate option price") #buttton to calculate price
 
 
 if calculate:
-    error_important = []
+    error_important = [] #list for important error
     if (
         option_type is None or option_kind is None or s0 is None or strike_price is None or volatility_of_stock is None
-        or start_date is None or end_date is None or risk_free_interest_rate is None ):
+        or start_date is None or end_date is None or risk_free_interest_rate is None ): #if any of them is empty 
 
-        error_important.append("Please fill in all the required fields.")
+        error_important.append("Please fill in all the required fields.") #ask them to fill in all the fields
     if error_important:
         for err in error_important:
-                st.error(err)
+                st.error(err) #show error message 
     else:
-        error = []
+        error = [] #for less important error
         if end_date <= start_date:
-            error.append("End date must be after start date")
+            error.append("End date must be after start date") #add all the errors in list 
         if s0 == 0:
                 error.append("Spot price must be greater than 0")
         if strike_price ==0:
@@ -143,9 +143,9 @@ if calculate:
         
         if error:
             for err in error:
-                st.error(err)
+                st.error(err) #show error 
         else:
-            risk_free_interest_rate= round(risk_free_interest_rate, 2)
+            risk_free_interest_rate= round(risk_free_interest_rate, 2) #round all the value 
             strike_price = round(strike_price, 2)
             s0 = round(s0, 2)
             volatility_of_stock= round(volatility_of_stock, 2)
@@ -158,10 +158,10 @@ if calculate:
                 r=risk_free_interest_rate,
                 start=start_date,
                 end=end_date
-                )
+                ) #put in data into the option function 
             
-            if approach == "Black-Scholes-Merton (BSM) model":
-                price = option_input.getPrice()
+            if approach == "Black-Scholes-Merton (BSM) model": #use differnt method to caLculate base on their options
+                price = option_input.getPrice() 
             elif approach == "Monte Carlo simulation":
                 price = option_input.getPrice(method="MC")
             else:
@@ -169,6 +169,6 @@ if calculate:
 
 
 
-            st.write(option_input)
-            st.subheader(f"Option price: {round(price,4)}")
+            st.write(option_input) #show the user input 
+            st.subheader(f"Option price: {round(price,4)}") #show result
         
