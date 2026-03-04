@@ -2,7 +2,6 @@ import streamlit as st
 from functions import *
 # streamlit run My_app/4_create_account_page.py to run the app
 
-
 st.title("Create account") #title for page 
 
 with st.form("Create account", enter_to_submit=True): #form to creae account
